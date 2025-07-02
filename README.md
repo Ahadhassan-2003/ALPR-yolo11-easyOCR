@@ -1,0 +1,1 @@
+# ALPR-yolo11-easyOCR
