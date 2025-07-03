@@ -40,6 +40,7 @@ These datasets were preprocessed to ensure compatibility with YOLOv11 format, in
   - `shutil`
   - `math`
   - `re`
+  - `subprocess` (for video compression)
 
 ## Setup
 
@@ -48,11 +49,12 @@ These datasets were preprocessed to ensure compatibility with YOLOv11 format, in
 
 2. **Install Dependencies**:
    - Execute the installation commands provided in the notebook or scripts (e.g., `!pip install ultralytics easyocr`) to install required libraries.
+   - Ensure `ffmpeg` is available for video compression (pre-installed in Colab).
 
 3. **Upload Files**:
    - Upload your dataset to `/content/Pakistani License Plates (Merged) - YOLOv11/`.
    - Upload your video file (e.g., `carLicence1.mp4`) to `/content/data/` or test images to the appropriate split directory.
-   - Upload your pre-trained YOLOv11 model (e.g., `best.pt`) to `/content/weights/` or use the `yolo_backup_runs` directory.
+   - Upload your pre-trained YOLOv11 model (e.g., `best.pt`) to `/content/runs/detect/train/weights/` or use the `yolo_backup_runs` directory.
 
 4. **Set GPU Runtime**:
    - Go to `Runtime > Change runtime type > Hardware accelerator > GPU` in Colab.
@@ -70,10 +72,18 @@ These datasets were preprocessed to ensure compatibility with YOLOv11 format, in
    - Run the notebook to process test images from `Pakistani License Plates (Merged) - YOLOv11/images/test`.
    - Annotated images with OCR results are saved to `predicted_images_easyocr`.
 
+3. **Source Inference**:
+   - Use the `infer_from_source` function to process videos or images.
+   - Example usage with tested videos:
+     - [Lahore Roads Traffic 1](https://www.pexels.com/video/lahore-roads-traffic-17814090/)
+     - [Lahore Roads Traffic 2](https://www.pexels.com/video/lahore-roads-traffic-17814089/)
+     - [Islamabad Expressway](https://www.pexels.com/video/islamabad-expressway-19549786/)
+   - Download the videos and upload to `/content/data/`, then call `infer_from_source("/content/data/video.mp4")` in a Colab cell.
 
 ### Output
 - **Annotated Images**: Saved in `predicted_images_easyocr` for test images, with filenames reflecting the original image names and OCR text.
 - **YOLO Runs**: Saved in `yolo_backup_runs` for reference, containing training and validation results.
+- **Annotated Videos**: Saved in `predicted_output` as compressed `.mp4` files (e.g., `video_annotated_compressed.mp4`) after processing with `infer_from_source`.
 
 ## Preprocessing Scripts
 
@@ -102,6 +112,27 @@ The dataset was preprocessed using the following custom scripts, included in thi
 
 These scripts ensure the dataset is properly formatted and validated for YOLOv11 training and inference.
 
+## Inference Function
+
+The `infer_from_source` function processes various input sources:
+- **Videos**: Processes `.mp4` or `.avi` files, annotates frames, and saves compressed output videos.
+- **Webcam**: Supports live webcam feed (source = `0` or device index).
+- **Image Directories**: Annotates all images in a directory.
+- **Single Images**: Annotates a single image file.
+
+### Example Usage
+```python
+infer_from_source("/content/data/lahore_roads_17814090.mp4")  # Process a downloaded video
+```
+
+### Tested Videos
+The function was tested on the following Pexels videos:
+- [Lahore Roads Traffic 1](https://www.pexels.com/video/lahore-roads-traffic-17814090/)
+- [Lahore Roads Traffic 2](https://www.pexels.com/video/lahore-roads-traffic-17814089/)
+- [Islamabad Expressway](https://www.pexels.com/video/islamabad-expressway-19549786/)
+
+Download the videos, upload to `/content/data/`, and run the function to generate annotated outputs.
+
 ## Example Output
 
 An example of an annotated image is included in the repository. The license plate "LEE 5559" is detected and recognized, with the bounding box and text annotation applied.
@@ -126,3 +157,4 @@ This project is open-source under the [MIT License](LICENSE). Feel free to use, 
 - [Ultralytics](https://github.com/ultralytics/ultralytics) for YOLOv11.
 - [JaidedAI](https://github.com/JaidedAI/EasyOCR) for EasyOCR.
 - Roboflow community for providing the base datasets.
+- [Pexels](https://www.pexels.com/) for providing test video sources.
